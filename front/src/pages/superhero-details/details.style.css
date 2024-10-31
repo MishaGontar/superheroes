@@ -1,0 +1,39 @@
+.cardDetails {
+    @apply px-10 py-5 sm:w-full md:w-3/5 xl:w-2/3
+}
+
+.card-body {
+    @apply flex sm:flex-col md:flex-row space-x-5 space-y-2 w-full
+}
+
+.box-info-details {
+    @apply flex flex-col w-full space-y-2
+}
+
+.text-info {
+    @apply text-lg font-bold mb-2
+}
+
+.text-info-content {
+    @apply font-normal
+}
+
+.text-line {
+    @apply my-2
+}
+
+.box-image {
+    @apply md:w-2/3
+}
+
+.image-content {
+    @apply rounded-lg shadow-lg w-96 h-96 object-contain
+}
+
+.box-arrows {
+    @apply flex flex-row w-full justify-between
+}
+
+.button-actions-detail {
+    @apply flex flex-row justify-between mx-5
+}

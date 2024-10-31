@@ -2,6 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
-.flex-center{
+.flex-center {
     @apply flex justify-center items-center
+}
+
+.error-msg {
+    @apply text-red-500
+}
+
+.container {
+    @apply flex justify-center w-full
+}
+
+.card {
+    @apply px-10 py-5 sm:w-full md:w-3/5 xl:w-1/3
+}
+
+.card-header {
+    @apply text-4xl font-extrabold justify-center
 }

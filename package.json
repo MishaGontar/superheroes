@@ -1,12 +1,9 @@
 {
   "name": "superheroes",
-  "workspaces": [
-    "front",
-    "backend"
-  ],
   "scripts": {
-    "start:front": "npm --prefix ./front run dev",
-    "start:back": "npm --prefix ./backend run start",
-    "start:back:dev": "npm --prefix ./backend run start:dev"
+    "start:front": "cd front && npm run dev",
+    "start:back": "cd backend && npm start",
+    "start:back:dev": "cd backend && npm run start:dev",
+    "install": "cd front && npm install && cd ../backend && npm install"
   }
 }
