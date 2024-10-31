@@ -7,10 +7,10 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-/back/dist
-/back/node_modules
-/back/build
-/back/.env
+/backend/dist
+/backend/node_modules
+/backend/build
+/backend/.env
 
 /front/dist
 /front/node_modules
