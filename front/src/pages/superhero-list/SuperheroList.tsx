@@ -1,5 +1,5 @@
 import {ISuperheroItemCard} from "../../interfaces/superheroes.ts";
-import {useLoaderData} from "react-router-dom";
+import {Link, useLoaderData} from "react-router-dom";
 import SuperheroCard from "../../components/list/SuperheroCard.tsx";
 import {Pagination} from "@nextui-org/react";
 import {useEffect, useState} from "react";
@@ -29,6 +29,13 @@ export default function SuperheroList() {
 
     if (isLoading) {
         return <CustomSpinner/>
+    }
+    if (superheroes.superheroes.length === 0) {
+        return (
+            <div>
+                There are no heroes yet...
+                <Link to='/superheroes/create' className="text-orange-500">Create one!</Link>
+            </div>)
     }
     return (
         <div>
