@@ -1,36 +1,46 @@
 import {Button, Image} from "@nextui-org/react";
-import {ErrorMessage, FormikHelpers} from "formik";
+import {ErrorMessage, useFormikContext} from "formik";
 import {ChangeEvent, useEffect, useRef, useState} from "react";
-import {ISuperheroInformation} from "../../pages/superhero-create/interfaces.ts";
 import {Images} from "../../pages/superhero-details/interface.ts";
 import {backUrl} from "../../main.tsx";
 import axios from "axios";
 
 interface ChooseImageBtnProps {
-    setFieldValue: FormikHelpers<ISuperheroInformation>['setFieldValue'];
     images?: Images[];
 }
 
-export const isUploadedImg = (path: string) => path.startsWith("upload")
+interface ImageItem {
+    file?: File;
+    url: string;
+    isUploaded: boolean;
+}
 
-export default function ImageUploaderWithPreview({setFieldValue, images = []}: ChooseImageBtnProps) {
-    const [previewImages, setPreviewImages] = useState<string[]>(images.map(img => img.path));
+export default function ImageUploaderWithPreview({images = []}: ChooseImageBtnProps) {
+    const [imageItems, setImageItems] = useState<ImageItem[]>(images.map(img => ({
+        url: `${backUrl}/${img.path}`,
+        isUploaded: true,
+    })));
     const fileInputRef = useRef<HTMLInputElement | null>(null);
+    const {setFieldValue} = useFormikContext();
 
     useEffect(() => {
-        if (images?.length > 0) {
-            setFieldValue("images", previewImages);
-        }
-    }, []);
+        const filesForUpload = imageItems
+            .filter(item => !item.isUploaded)
+            .map(item => item.file);
+        setFieldValue("images", filesForUpload);
+    }, [imageItems]);
 
     async function handleFileChoose(event: ChangeEvent<HTMLInputElement>): Promise<void> {
         const files: FileList | null = event.currentTarget.files;
-        if (files) {
-            const fileArray: File[] = Array.from(files);
-            await setFieldValue("images", fileArray);
-            const previewUrls: string[] = fileArray.map(file => URL.createObjectURL(file));
-            setPreviewImages(prevState => [...previewUrls, ...prevState]);
+        if (!files) {
+            return
         }
+        const newImageItems: ImageItem[] = Array.from(files).map(file => ({
+            file,
+            url: URL.createObjectURL(file),
+            isUploaded: false,
+        }));
+        setImageItems(prevItems => [...newImageItems, ...prevItems]);
     }
 
     function openFileDialog() {
@@ -38,29 +48,20 @@ export default function ImageUploaderWithPreview({setFieldValue, images = []}: C
     }
 
     async function removeImage(index: number) {
-        const path = previewImages[index];
-        const isLocalFile = !isUploadedImg(path)
+        const itemToRemove = imageItems[index];
 
-        setPreviewImages(prevState => {
-            const updatedImages = [...prevState];
-            updatedImages.splice(index, 1);
-            if (isLocalFile) {
-                setFieldValue("images", updatedImages);
+        setImageItems(prevItems => prevItems.filter((_, i) => i !== index));
+
+        if (itemToRemove.isUploaded) {
+            const img = images.find(i => `${backUrl}/${i.path}` === itemToRemove.url);
+            if (!img) {
+                console.warn("Can't find img by path", itemToRemove.url);
+                return;
             }
-            return updatedImages;
-        });
-
-        if (isLocalFile) {
-            URL.revokeObjectURL(path);
-            return
+            await axios.delete(`/image/${img.id}`);
+        } else if (itemToRemove.file) {
+            URL.revokeObjectURL(itemToRemove.url);
         }
-
-        const img = images.find(i => i.path === path)
-        if (!img) {
-            console.warn("Can't find img by path", path)
-            return;
-        }
-        await axios.delete(`/image/${img.id}`)
     }
 
     return (
@@ -77,20 +78,20 @@ export default function ImageUploaderWithPreview({setFieldValue, images = []}: C
                 Choose Images
             </Button>
             <ErrorMessage name="images" component="div" className="error-msg text-sm"/>
-            {previewImages.length > 0 && <div className="m-2">
+            {imageItems.length > 0 && <div className="m-2">
                 <h1>Preview Images:</h1>
                 <div className="text-xs text-gray-500">Click on image to remove</div>
             </div>
             }
             <div className="grid grid-cols-3 gap-1">
-                {previewImages.map((src, index) => (
+                {imageItems.map((img, index) => (
                     <Image
                         key={index}
                         onClick={() => removeImage(index)}
                         isZoomed
                         className="w-52 h-40 object-contain"
                         alt={`Preview ${index}`}
-                        src={isUploadedImg(src) ? `${backUrl}/${src}` : src}
+                        src={img.url}
                     />
                 ))}
             </div>

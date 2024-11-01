@@ -24,7 +24,7 @@ export default function SuperheroForm(props: SuperheroProps) {
                     validationSchema={validationSchema}
                     onSubmit={props.handleSubmit}
                 >
-                    {({setFieldValue}) => (
+                    {() => (
                         <Form>
                             <CustomField name="nickname"
                                          label="Nickname"
@@ -52,8 +52,7 @@ export default function SuperheroForm(props: SuperheroProps) {
                                          placeholder="Enter a superpowers for a superhero"
                                          errorMessage="Please enter a superpowers for a superhero"
                             />
-                            <ImageUploaderWithPreview setFieldValue={setFieldValue}
-                                                      images={props.images}/>
+                            <ImageUploaderWithPreview images={props.images}/>
                             <Button color="warning" type="submit" className="mt-2" fullWidth>
                                 {props.buttonText}
                             </Button>

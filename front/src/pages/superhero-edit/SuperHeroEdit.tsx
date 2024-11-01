@@ -21,18 +21,12 @@ export default function SuperHeroEdit() {
     async function handleEdit(values: TypesSuperheroInfo) {
         const {images, ...formValueData} = values;
         const formImagesData = new FormData();
-        Object.entries(values).forEach(([key, value]) => {
-            if (key === 'images') {
-                if (value[0] instanceof File)
-                    value.forEach((image: File) => formImagesData.append('images', image))
-            }
+        images.forEach((image: File) => formImagesData.append('images', image))
 
-        });
         const isAnyImg: boolean = !(formImagesData.entries().next().done)
         const events: Promise<AxiosResponse>[] = [
             axios.patch(`superheroes/${superhero.id}`, formValueData)
         ]
-
 
         if (isAnyImg) {
             events.push(axios.post(`image/superhero/${superhero.id}`, formImagesData, HEADERS_FORM_DATA))
