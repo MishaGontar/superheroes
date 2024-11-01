@@ -1,21 +1,15 @@
 import {Form, Formik} from 'formik';
 import {Button, CardBody} from "@nextui-org/react";
-import {CustomField} from "./CustomField.tsx";
-import ImageUploaderWithPreview from "./ImageUploaderWithPreview.tsx";
-import {validationSchema} from "../../pages/superhero-create/validation.ts";
-import {ISuperheroInformation, TypesSuperheroInfo} from "../../pages/superhero-create/interfaces.ts";
+import CustomField from "./field/CustomField.tsx";
+import ImageUploaderWithPreview from "./image-uploader/ImageUploaderWithPreview.tsx";
+import {validationSchema} from "./validation.ts";
 import CardCenter from "../CardCenter.tsx";
-import {Images} from "../../pages/superhero-details/interface.ts";
-
-interface SuperheroProps {
-    initialValues: ISuperheroInformation,
-    images?: Images[],
-    handleSubmit: (values: TypesSuperheroInfo) => Promise<void>;
-    buttonText: string;
-    headerText: string;
-}
+import {SuperheroProps} from "./SuperheroForm.types.ts";
+import {useMemo} from "react";
+import {ImageItem} from "./image-uploader/ImageUploader.types.ts";
 
 export default function SuperheroForm(props: SuperheroProps) {
+    const images: ImageItem[] = useMemo(() => props.initialValues.images, [props.initialValues.images]);
     return (
         <CardCenter headerText={props.headerText}>
             <CardBody>
@@ -52,7 +46,7 @@ export default function SuperheroForm(props: SuperheroProps) {
                                          placeholder="Enter a superpowers for a superhero"
                                          errorMessage="Please enter a superpowers for a superhero"
                             />
-                            <ImageUploaderWithPreview images={props.images}/>
+                            <ImageUploaderWithPreview images={images}/>
                             <Button color="warning" type="submit" className="mt-2" fullWidth>
                                 {props.buttonText}
                             </Button>

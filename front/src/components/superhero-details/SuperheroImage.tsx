@@ -1,11 +1,11 @@
 import ArrowRight from "../../assets/ArrowRight.tsx";
 import ArrowLeft from "../../assets/ArrowLeft.tsx";
-import {Images} from "../../pages/superhero-details/interface.ts";
 import {useState} from "react";
 import {backUrl} from "../../main.tsx";
 import {Image} from "@nextui-org/react";
+import {IImage} from "../../interfaces/image.ts";
 
-export default function SuperHeroImage({images}: { images: Images[] }) {
+export default function SuperheroImage({images}: { images: IImage[] }) {
     const [imgIndex, setImgIndex] = useState<number>(0)
 
     function handleArrowLick(n: number) {

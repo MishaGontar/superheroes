@@ -1,6 +1,6 @@
-import { Images } from "../images/interfaces";
+import { Image } from "../images/interfaces";
 
-export interface ISuperHero {
+export interface ISuperhero {
   id: number;
   nickname: string;
   realName: string;
@@ -9,20 +9,20 @@ export interface ISuperHero {
   superpowers: string;
 }
 
-export interface ISuperHeroDetail extends ISuperHero {
+export interface ISuperheroDetail extends ISuperhero {
   images: {
-    image: Images[];
+    image: Image[];
   };
 }
 
-export interface ISuperHeroesPagination {
+export interface ISuperheroItemList {
   id: number;
   nickname: string;
-  images: Images[];
+  images: Image[];
 }
 
-export interface ISuperHeroesPaginationDetails {
-  superheroes: ISuperHeroesPagination[];
+export interface ISuperheroesListPage {
+  superheroes: ISuperheroItemList[];
   total: number;
   page: number;
   lastPage: number;

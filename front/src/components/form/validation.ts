@@ -6,5 +6,4 @@ export const validationSchema = yup.object({
     originDescription: yup.string().required('Required'),
     catchPhrase: yup.string().required('Required').max(255),
     superpowers: yup.string().required('Required'),
-    images: yup.array().min(1, 'At least one image is required'),
 });

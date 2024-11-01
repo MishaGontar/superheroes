@@ -24,3 +24,7 @@ export function sendInfoNotify(msg: string) {
 export function sendErrorNotify(msg: string) {
     toast.error(msg, options)
 }
+
+export function sendUnexpectedErrorNotify() {
+    toast.error("Something went wrong on our side.", options)
+}

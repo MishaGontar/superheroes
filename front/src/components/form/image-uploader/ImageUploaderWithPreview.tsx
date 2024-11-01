@@ -1,68 +1,60 @@
 import {Button, Image} from "@nextui-org/react";
-import {ErrorMessage, useFormikContext} from "formik";
-import {ChangeEvent, useEffect, useRef, useState} from "react";
-import {Images} from "../../pages/superhero-details/interface.ts";
-import {backUrl} from "../../main.tsx";
+import {useFormikContext} from "formik";
+import {ChangeEvent, useCallback, useEffect, useRef, useState} from "react";
 import axios from "axios";
+import {ChooseImageBtnProps, ImageItem} from "./ImageUploader.types.ts";
+import {sendErrorNotify, sendInfoNotify} from "../../../NotifyUtils.ts";
+import {v4 as uuid} from 'uuid'
 
-interface ChooseImageBtnProps {
-    images?: Images[];
-}
-
-interface ImageItem {
-    file?: File;
-    url: string;
-    isUploaded: boolean;
-}
-
-export default function ImageUploaderWithPreview({images = []}: ChooseImageBtnProps) {
-    const [imageItems, setImageItems] = useState<ImageItem[]>(images.map(img => ({
-        url: `${backUrl}/${img.path}`,
-        isUploaded: true,
-    })));
+function ImageUploaderWithPreview({images = []}: ChooseImageBtnProps) {
+    const [imageItems, setImageItems] = useState<ImageItem[]>(images);
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const {setFieldValue} = useFormikContext();
 
     useEffect(() => {
-        const filesForUpload = imageItems
-            .filter(item => !item.isUploaded)
-            .map(item => item.file);
+        const filesForUpload = imageItems.filter(item => !item.isUploaded);
         setFieldValue("images", filesForUpload);
-    }, [imageItems]);
+    }, [imageItems, setFieldValue]);
 
-    async function handleFileChoose(event: ChangeEvent<HTMLInputElement>): Promise<void> {
+    const handleFileChoose = useCallback((event: ChangeEvent<HTMLInputElement>) => {
         const files: FileList | null = event.currentTarget.files;
         if (!files) {
-            return
+            return;
         }
         const newImageItems: ImageItem[] = Array.from(files).map(file => ({
+            id: uuid(),
             file,
             url: URL.createObjectURL(file),
             isUploaded: false,
         }));
         setImageItems(prevItems => [...newImageItems, ...prevItems]);
-    }
+    }, []);
 
-    function openFileDialog() {
+    const openFileDialog = useCallback(() => {
         if (fileInputRef.current) fileInputRef.current.click();
-    }
+    }, []);
 
-    async function removeImage(index: number) {
-        const itemToRemove = imageItems[index];
-
-        setImageItems(prevItems => prevItems.filter((_, i) => i !== index));
-
+    const removeImage = useCallback((id: number | string) => {
+        const itemToRemove = imageItems.find(i => i.id === id);
+        if (!itemToRemove) {
+            sendErrorNotify("Can't remove image")
+            return;
+        }
+        const updateImageItems = () => {
+            setImageItems(prevItems => prevItems.filter((i) => i.id !== id));
+        };
         if (itemToRemove.isUploaded) {
-            const img = images.find(i => `${backUrl}/${i.path}` === itemToRemove.url);
-            if (!img) {
-                console.warn("Can't find img by path", itemToRemove.url);
-                return;
-            }
-            await axios.delete(`/image/${img.id}`);
+            axios.delete(`/image/${itemToRemove.id}`)
+                .then(() => {
+                    sendInfoNotify("Image successfully deleted.")
+                    updateImageItems()
+                })
+                .catch(() => sendErrorNotify("Can't remove image"));
         } else if (itemToRemove.file) {
             URL.revokeObjectURL(itemToRemove.url);
+            updateImageItems();
         }
-    }
+    }, [imageItems]);
 
     return (
         <div>
@@ -77,20 +69,19 @@ export default function ImageUploaderWithPreview({images = []}: ChooseImageBtnPr
             <Button className="mt-2 w-1/2" variant="bordered" onClick={openFileDialog}>
                 Choose Images
             </Button>
-            <ErrorMessage name="images" component="div" className="error-msg text-sm"/>
             {imageItems.length > 0 && <div className="m-2">
                 <h1>Preview Images:</h1>
                 <div className="text-xs text-gray-500">Click on image to remove</div>
             </div>
             }
             <div className="grid grid-cols-3 gap-1">
-                {imageItems.map((img, index) => (
+                {imageItems.map((img) => (
                     <Image
-                        key={index}
-                        onClick={() => removeImage(index)}
+                        key={img.id}
+                        onClick={() => removeImage(img.id)}
                         isZoomed
                         className="w-52 h-40 object-contain"
-                        alt={`Preview ${index}`}
+                        alt={`Preview ${img.id}`}
                         src={img.url}
                     />
                 ))}
@@ -98,3 +89,5 @@ export default function ImageUploaderWithPreview({images = []}: ChooseImageBtnPr
         </div>
     )
 }
+
+export default ImageUploaderWithPreview

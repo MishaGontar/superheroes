@@ -3,7 +3,7 @@ interface SuperHeroInfoProps {
     content: string;
 }
 
-export default function SuperHeroInfoText({title, content}: SuperHeroInfoProps) {
+export default function SuperheroInfoText({title, content}: SuperHeroInfoProps) {
     return (
         <div className="text-info">
             {title}: <span className="text-info-content">{content}</span>

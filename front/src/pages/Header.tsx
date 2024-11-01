@@ -7,13 +7,13 @@ export default function Header() {
         <Navbar>
             <NavbarContent className="hidden sm:flex gap-4" justify="end">
                 <NavbarItem>
-                    <Link color="foreground" to="/superheroes/create">
-                        Create a Superhero
+                    <Link to="/" aria-current="page">
+                        All superheroes
                     </Link>
                 </NavbarItem>
                 <NavbarItem>
-                    <Link to="/" aria-current="page">
-                        All superheroes
+                    <Link color="foreground" to="/superheroes/create">
+                        Create a Superhero
                     </Link>
                 </NavbarItem>
                 <NavbarItem>

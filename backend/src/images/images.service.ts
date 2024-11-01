@@ -1,6 +1,6 @@
-import {Injectable} from "@nestjs/common";
+import {Injectable, NotFoundException} from "@nestjs/common";
 import {PrismaService} from "../prisma.service";
-import {Images} from "./interfaces";
+import {Image} from "./interfaces";
 import {MulterFile} from "../storage";
 import {join} from "path"
 import {unlink} from "fs/promises";
@@ -13,14 +13,11 @@ export class ImagesService {
     async createImages(
         files: MulterFile[],
         superheroId: number,
-    ): Promise<Images[]> {
+    ): Promise<Image[]> {
         return await Promise.all(
-            files.map(async (i: MulterFile): Promise<Images> => {
-                const image: Images = await this.prisma.images.create({
-                    data: {
-                        path: i.path,
-                        originalName: i.originalname,
-                    },
+            files.map(async ({path, originalname: originalName}: MulterFile): Promise<Image> => {
+                const image: Image = await this.prisma.images.create({
+                    data: {path, originalName,},
                 });
 
                 await this.prisma.image_Heroes.create({
@@ -35,13 +32,13 @@ export class ImagesService {
         );
     }
 
-    async remove(id: number): Promise<Images> {
+    async remove(id: number): Promise<Image> {
         const image = await this.prisma.images.findUnique({
             where: {id},
         });
 
         if (!image) {
-            throw new Error("Image not found");
+            throw new NotFoundException("Image not found");
         }
         const filePath = join(__dirname, '..', '..', image.path);
         await unlink(filePath);

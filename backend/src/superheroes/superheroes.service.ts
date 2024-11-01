@@ -2,9 +2,9 @@ import {ConflictException, Injectable, NotFoundException,} from "@nestjs/common"
 import {UpdateSuperheroDto} from "./dto/update-superhero.dto";
 import {PrismaService} from "../prisma.service";
 import {findAllPagination, fullIncludeData} from "./constans";
-import {ISuperHero, ISuperHeroDetail, ISuperHeroesPagination, ISuperHeroesPaginationDetails,} from "./interfaces";
+import {ISuperhero, ISuperheroDetail, ISuperheroesListPage, ISuperheroItemList,} from "./interfaces";
 import {CreateSuperheroDto} from "./dto/create-superhero.dto";
-import {Images} from "../images/interfaces";
+import {Image} from "../images/interfaces";
 import {ImagesService} from "../images/images.service";
 
 @Injectable()
@@ -15,15 +15,14 @@ export class SuperheroesService {
     ) {
     }
 
-    async create(superHero: CreateSuperheroDto): Promise<ISuperHero> {
+    async create(superHero: CreateSuperheroDto): Promise<ISuperhero> {
+        const {nickname} = superHero;
         const isExistSuperhero = await this.prisma.superheroes.findFirst({
-            where: {nickname: superHero.nickname},
+            where: {nickname},
         });
 
         if (isExistSuperhero) {
-            throw new ConflictException(
-                `Superhero with nickname '${superHero.nickname}' already exists.`,
-            );
+            throw new ConflictException(`Superhero with nickname '${nickname}' already exists.`);
         }
 
         return this.prisma.superheroes.create({
@@ -31,25 +30,23 @@ export class SuperheroesService {
         });
     }
 
-    async findAll(page = 1, limit = 5): Promise<ISuperHeroesPaginationDetails> {
-        const skip: number = (page - 1) * limit;
+    async findAll(page = 1, limit = 5): Promise<ISuperheroesListPage> {
+        const skip = (page - 1) * limit;
         const [data, total] = await Promise.all([
             this.prisma.superheroes.findMany(findAllPagination(skip, limit)),
             this.prisma.superheroes.count(),
         ]);
-        const readyData: ISuperHeroesPagination[] = data.map((superhero) =>
-            this.getPrettySuperHeroObj(superhero),
-        );
+        const prettySuperheroesList: ISuperheroItemList[] = data.map((superhero) => this.getPrettySuperHeroObj(superhero),);
 
         return {
-            superheroes: readyData,
+            superheroes: prettySuperheroesList,
             total,
             page,
             lastPage: Math.ceil(total / limit),
         };
     }
 
-    async findOne(id: number): Promise<ISuperHeroDetail> {
+    async findOne(id: number): Promise<ISuperheroDetail> {
         const superhero = await this.prisma.superheroes.findUnique({
             where: {id},
             include: fullIncludeData,
@@ -64,7 +61,7 @@ export class SuperheroesService {
     async update(
         id: number,
         updateSuperheroDto: UpdateSuperheroDto,
-    ): Promise<ISuperHeroDetail> {
+    ): Promise<ISuperheroDetail> {
         const superhero = await this.prisma.superheroes.update({
             where: {id},
             data: updateSuperheroDto,
@@ -73,20 +70,18 @@ export class SuperheroesService {
         return this.getPrettySuperHeroObj(superhero);
     }
 
-    async remove(id: number): Promise<ISuperHero> {
+    async remove(superheroId: number): Promise<ISuperhero> {
         const data = await this.prisma.image_Heroes.findMany({
-            where: {
-                superheroId: id
-            }
+            where: {superheroId}
         })
         await Promise.all([data.map(async (d) => await this.imageService.remove(d.imageId))])
-        return this.prisma.superheroes.delete({where: {id}});
+        return this.prisma.superheroes.delete({where: {id: superheroId}});
     }
 
     private getPrettySuperHeroObj(superhero) {
         return {
             ...superhero,
-            images: superhero.images.map((i: { image: Images }) => ({...i.image})),
+            images: superhero.images.map((i: { image: Image }) => ({...i.image})),
         };
     }
 }
