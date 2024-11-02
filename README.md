@@ -57,7 +57,7 @@ delete superhero profiles. Each profile includes detailed information and associ
    ```bash
    npm run start:front 
    ```
-### Environment Configuration
+## Environment Configuration
 
 Ensure that you have created `.env` files for both the frontend and backend to properly configure the environment
 variables.
