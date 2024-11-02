@@ -38,6 +38,25 @@ delete superhero profiles. Each profile includes detailed information and associ
 - **npm**
 - **Postgresql** database
 
+### Setup
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/superhero-database.git
+   cd superhero-database/backend
+2. Install dependencies (it will install for front and backend):
+   ```bash
+   npm install
+3. After configuring your .env file, run the following command to apply migrations:
+   ```bash
+   npm run database:migrate
+4. Run Backend:
+   ```bash
+   npm run start:back
+5. Run Frontend:
+   ```bash
+   npm run start:front 
+   ```
 ### Environment Configuration
 
 Ensure that you have created `.env` files for both the frontend and backend to properly configure the environment
@@ -58,24 +77,4 @@ Create a `.env` file in the `backend` directory with the following content:
 | Name           | Description                                    | Example Value                                                   |
 |----------------|------------------------------------------------|-----------------------------------------------------------------|
 | `DATABASE_URL` | Connection string for the PostgreSQL database. | `"postgresql://<username>:<password>@<host>:<port>/<database>"` |
-
-### Setup
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/superhero-database.git
-   cd superhero-database/backend
-2. Install dependencies (it will install for front and backend):
-   ```bash
-   npm install
-3. After configuring your .env file, run the following command to apply migrations:
-   ```bash
-   npm run database:migrate
-4. Run Backend:
-   ```bash
-   npm run start:back
-5. Run Frontend:
-   ```bash
-   npm run start:front 
-   ```
    
