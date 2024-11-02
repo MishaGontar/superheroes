@@ -1,11 +1,11 @@
 import {Navbar, NavbarContent, NavbarItem} from "@nextui-org/react";
 import {Link} from "react-router-dom";
-import {ThemeSwitcher} from "../components/ThemeSwitcher.tsx";
+import {ThemeSwitcher} from "../../components/ThemeSwitcher.tsx";
 
 export default function Header() {
     return (
         <Navbar>
-            <NavbarContent className="hidden sm:flex gap-4" justify="end">
+            <NavbarContent className="nav-content" justify="end">
                 <NavbarItem>
                     <Link to="/" aria-current="page">
                         All superheroes

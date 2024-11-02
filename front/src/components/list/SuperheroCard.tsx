@@ -3,6 +3,7 @@ import {Card, CardBody, CardHeader, Image} from "@nextui-org/react";
 import {backUrl} from "../../main.tsx";
 import {IImage} from "../../interfaces/image.ts";
 import {useNavigate} from "react-router-dom";
+import './superhero-card.style.css'
 
 interface SuperheroCardProps {
     superhero: ISuperheroItemCard;
@@ -13,15 +14,15 @@ export default function SuperheroCard({superhero}: SuperheroCardProps) {
     const navigate = useNavigate();
 
     return (
-        <Card className="py-4 dark:hover:bg-gray-700 hover:bg-gray-200 cursor-pointer">
-            <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
-                <h4 className="font-bold text-large">{superhero.nickname}</h4>
+        <Card className="hero-card">
+            <CardHeader className="hero-card-header">
+                <h4 className="hero-card-header-text">{superhero.nickname}</h4>
             </CardHeader>
-            <CardBody className="overflow-visible py-2 items-center"
+            <CardBody className="hero-card-body"
                       onClick={() => navigate(`/superhero/${superhero.id}`)}>
                 <Image
                     alt="Image superhero"
-                    className="object-contain rounded-xl"
+                    className="hero-card-image"
                     src={image ? `${backUrl}/${image.path}` : ''}
                     height={220}
                     width={250}

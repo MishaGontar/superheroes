@@ -1,0 +1,19 @@
+.hero-card {
+    @apply py-4 dark:hover:bg-gray-700 hover:bg-gray-200 cursor-pointer;
+}
+
+.hero-card-header {
+    @apply pb-0 pt-2 px-4 flex-col items-start;
+}
+
+.hero-card-header-text {
+    @apply font-bold text-large;
+}
+
+.hero-card-body {
+    @apply overflow-visible py-2 items-center
+}
+
+.hero-card-image {
+    @apply object-contain rounded-xl
+}

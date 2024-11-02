@@ -1,4 +1,4 @@
-import axios, {AxiosError} from "axios";
+import axios from "axios";
 import {sendErrorNotify} from "./NotifyUtils.ts";
 
 export const HEADERS_FORM_DATA = {
@@ -13,11 +13,8 @@ export async function getAxios(url: string) {
         const response = await axios.get(`${server}${url}`)
         return response.data;
     } catch (e) {
-        const error = e as AxiosError;
-        if (error.status === 404) {
-            throw e;
-        }
-        sendErrorNotify("Can't load super hero list. Please try again later")
+        sendErrorNotify("Can't load. Please try again later")
+        console.error(e)
         throw e;
     }
 }

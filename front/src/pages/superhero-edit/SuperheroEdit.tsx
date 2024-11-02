@@ -33,7 +33,6 @@ export default function SuperheroEdit() {
 
         const events: Promise<AxiosResponse>[] = [axios.patch(`superheroes/${superhero.id}`, formValueData)]
         const isAnyImg: boolean = !(formImagesData.entries().next().done)
-
         if (isAnyImg) {
             events.push(axios.post(`image/superhero/${superhero.id}`, formImagesData, HEADERS_FORM_DATA))
         }

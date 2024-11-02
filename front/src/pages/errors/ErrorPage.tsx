@@ -1,29 +1,20 @@
 import {useNavigate} from "react-router-dom";
 import {Button} from "@nextui-org/react";
 import './error.styles.css'
+import {ErrorCodes, ErrorMessage, errors} from "./ErrorMessages.ts";
+
 
 interface ErrorProps {
-    code?: number;
-    headerText?: string;
-    context?: string;
+    errorCode: ErrorCodes;
 }
 
-const error404: ErrorProps = {
-    code: 404,
-    headerText: "Uh-oh!",
-    context: "We can't find that page."
-}
-
-export default function ErrorPage({
-                                      code = error404.code,
-                                      headerText = error404.headerText,
-                                      context = error404.context
-                                  }: ErrorProps) {
+export default function ErrorPage({errorCode = 404}: ErrorProps) {
     const navigate = useNavigate();
+    const {headerText, context}: ErrorMessage = errors[errorCode] || errors[404]
     return (
         <div className="error-container">
             <div className="error-box">
-                <h1 className="error-header-code">{code}</h1>
+                <h1 className="error-header-code">{errorCode}</h1>
 
                 <p className="error-header-text">{headerText}</p>
 

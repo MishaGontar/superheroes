@@ -21,3 +21,7 @@
 .card-header {
     @apply text-4xl font-extrabold justify-center
 }
+
+.nav-content {
+    @apply hidden sm:flex gap-4
+}
