@@ -16,19 +16,25 @@ delete superhero profiles. Each profile includes detailed information and associ
 
 ### Backend
 
-- **Node.js** with **Nest.js**
-- **Postgresql** for database management
-- **Prisma** as the ORM
+- **Node.js** with **Nest.js** for building server-side applications
+- **PostgreSQL** for database management
+- **Prisma** as the ORM for database interactions
+- **Multer** for handling image uploads
+- **Class-Transformer** and **Class-Validator** for data validation and transformation
 
 ### Frontend
 
 - **React** for building the user interface
 - **React Router** for navigation
 - **Axios** for HTTP requests
-
-### Additional Tools
-
-- **Multer** for image uploads
+- **NextUI** for UI components and styling
+- **Tailwind CSS** for utility-first CSS styling
+- **Formik** for form management
+- **Yup** for form validation
+- **Framer Motion** for animations
+- **React Toastify** for notifications
+- **React UUID** and **UUID** for generating unique identifiers
+- **Next Themes** for theme management
 
 ## Installation and Setup
 
