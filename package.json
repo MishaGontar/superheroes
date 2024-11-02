@@ -4,6 +4,7 @@
     "start:front": "cd front && npm run dev",
     "start:back": "cd backend && npm start",
     "start:back:dev": "cd backend && npm run start:dev",
-    "install": "cd front && npm install && cd ../backend && npm install"
+    "install": "cd front && npm install && cd ../backend && npm install",
+    "database:migrate": "cd backend && npx prisma migrate deploy"
   }
 }
