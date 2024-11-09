@@ -1,0 +1,7 @@
+.superhero-card {
+    @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5
+}
+
+.superhero-pagination {
+    @apply mt-5 flex justify-center
+}

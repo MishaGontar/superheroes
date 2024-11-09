@@ -6,6 +6,7 @@ import {useEffect, useState} from "react";
 import CustomSpinner from "../../components/spinner/Spinner.tsx";
 import {sendErrorNotify} from "../../NotifyUtils.ts";
 import {getAxios} from "../../constant.ts";
+import './superhero-list.style.css'
 
 interface SuperHeroListPage {
     page: number;
@@ -39,12 +40,12 @@ export default function SuperheroList() {
     }
     return (
         <div>
-            <div className="grid grid-cols-3 gap-2.5">
+            <div className="superhero-card">
                 {superheroes.superheroes.map((s: ISuperheroItemCard) =>
                     <SuperheroCard superhero={s} key={s.id}/>)
                 }
             </div>
-            <div className="mt-5 flex justify-center">
+            <div className="superhero-pagination">
                 <Pagination showControls
                             isCompact
                             loop
